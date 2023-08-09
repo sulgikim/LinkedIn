@@ -9,9 +9,9 @@ export default function HomeScreen() {
     <FlatList 
       data = {posts}
       renderItem={({item}) => <PostListItem post={item}/>} 
+      // keyExtractor={ (post) => post.id } //it doesn't need when array object has id or key 
       showsVerticalScrollIndicator = {false}
       contentContainerStyle = {{gap: 10}}
-
     />
   );
 }
