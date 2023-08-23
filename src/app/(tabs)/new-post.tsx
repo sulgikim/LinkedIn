@@ -1,17 +1,15 @@
 import { Text ,TextInput , View, Image, StyleSheet, Pressable } from 'react-native';
-import userJson from '../../../assets/data/user.json'; 
 import { useLayoutEffect, useState } from 'react';
-
-import { User } from '@/types';
 import { useNavigation, useRouter } from 'expo-router';
 
-type UserProps = {
-  user: User;
-}
+import * as ImagePicker from 'expo-image-picker';
+import { FontAwesome } from '@expo/vector-icons';
+
 
 export default function NewPostScreen() {
 
   const [content, setContent] = useState('');
+  const [image, setImage] = useState<string | null>(null);
 
   const navigation = useNavigation();
   const router = useRouter();
@@ -21,8 +19,24 @@ export default function NewPostScreen() {
 
     router.push('/(tabs)/'); //redirect to home screen 
     setContent('');
+    setImage(null);
   };
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images, //limit to images only, no video 
+      allowsEditing: true,  
+      // aspect: [4, 3],
+      quality: 0.5, // 1 is full quality, 0 is bad quality
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -62,9 +76,32 @@ export default function NewPostScreen() {
         multiline
       />
 
+      {image && <Image source={{uri: image}} style={styles.image} />}
 
       {/* Bottom Buttons */}
+      <View style={styles.footer}>
+        <Pressable onPress={pickImage} style={styles.iconButton}>
+          <FontAwesome 
+            name="image" 
+            size={24} 
+            color="black" />
+        </Pressable>
+        
+        <Pressable style={styles.iconButton}>
+          <FontAwesome 
+            name="camera" 
+            size={24} 
+            color="black" />
+        </Pressable>
 
+        <Pressable style={styles.iconButton}>
+          <FontAwesome 
+            name="glass" 
+            size={24} 
+            color="black" />
+        </Pressable>
+
+      </View>
     </View>
   );
 }
@@ -76,22 +113,22 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   //header 
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    marginBottom: 15, 
-  },
-  image: {
-    width: 50, 
-    aspectRatio: 1,
+  // header: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   padding: 10,
+  //   marginBottom: 15, 
+  // },
+  // image: {
+  //   width: 50, 
+  //   aspectRatio: 1,
 
-  },
-  toWho: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: 'gray',
-  },
+  // },
+  // toWho: {
+  //   fontSize: 18,
+  //   fontWeight: '600',
+  //   color: 'gray',
+  // },
   postButton: {
     padding: 5, 
     paddingHorizontal: 15,
@@ -107,5 +144,24 @@ const styles = StyleSheet.create({
   //content
   input: {
     fontSize: 18, 
+  },
+
+  image: {
+    width: '100%',
+    aspectRatio: 1,
+    marginTop: 'auto',
+  },
+
+  //footer
+  footer: {
+    marginTop: 'auto',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  iconButton: {
+    backgroundColor: 'gainsboro',
+    padding: 20,
+    borderRadius: 100,
+    //overflow: 'hidden',
   }
 });
