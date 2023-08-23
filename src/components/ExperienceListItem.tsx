@@ -3,14 +3,19 @@ import { Text, View, Image, StyleSheet } from 'react-native';
 
 type ExperienceListItemProp = {
     experience: Experience;
+    //isFirst: boolean;
 };
 
 
 export default function ExperienceListItem({
     experience,
+    isFirst,
     }: ExperienceListItemProp) {
     return  (
-        <View style={styles.container}>
+        <View style={[
+            styles.container, 
+            //{ backgroundColor: isFirst ? 'lightgray' : 'red'}, // only the first one in array is lightgray background
+            ]}>
             <Image
                 source={{uri: experience.companyImage}}
                 style={styles.image} 
@@ -32,6 +37,8 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         borderBottomWidth: 0.5,
         borderColor: 'lightgray',
+
+       // backgroundColor: 'white',
     },
     image: {
         width: 50, 

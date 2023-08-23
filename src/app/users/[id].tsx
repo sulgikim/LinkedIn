@@ -68,8 +68,12 @@ export default function UserProfile() {
             {/* Experience -- need to define type cuz the data is in array */} 
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Experience</Text>
-                {user.experience?.map(experience => (
-                <ExperienceListItem key={experience.id} experience={experience} />
+                {user.experience?.map((experience, index) => (
+                    <ExperienceListItem 
+                        key={experience.id} 
+                        experience={experience}
+                        // isFirst={index === 0}
+                    />
                 ))}
             </View>
         </ScrollView>
