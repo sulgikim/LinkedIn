@@ -29,16 +29,18 @@ export default function PostListItem({ post }: PostListItemProps) {
         <Link href={`/posts/${post.id}`} asChild>
             <Pressable style={styles.container}>
                 {/* Header */}
-                <View style={styles.header}> 
-                    <Image 
-                        source={{ uri: post.author.image }} // inline object
-                        style={styles.userImage}
-                    />
-                    <View>
-                        <Text style={styles.userName}>{post.author.name}</Text>
-                        <Text>{post.author.position}</Text>
-                    </View>
-                </View>
+                <Link href={`/users/${post.author.id}`} asChild>
+                    <Pressable style={styles.header}> 
+                        <Image 
+                            source={{ uri: post.author.image }} // inline object
+                            style={styles.userImage}
+                        />
+                        <View>
+                            <Text style={styles.userName}>{post.author.name}</Text>
+                            <Text>{post.author.position}</Text>
+                        </View>
+                    </Pressable>
+                </Link>
 
                 {/* Text Content */}
                 <Text style={styles.content}>{post.content}</Text>

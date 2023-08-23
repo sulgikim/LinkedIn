@@ -42,6 +42,7 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
+//top bar
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
