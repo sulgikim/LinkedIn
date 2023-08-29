@@ -68,7 +68,7 @@ export default function UserProfile() {
             {/* Experience -- need to define type cuz the data is in array */} 
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Experience</Text>
-                {user.experience?.map((experience, index) => (
+                {user.experience?.map((experience) => ( // need index for isFirst, (experience, index) like this 
                     <ExperienceListItem 
                         key={experience.id} 
                         experience={experience}

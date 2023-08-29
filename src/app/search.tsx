@@ -6,7 +6,7 @@ import { useLayoutEffect, useState } from 'react';
 
 
 export default function SearchScreen() {
-    const [search, setSearch] = useState();
+    const [search, setSearch] = useState('');
     const navigation = useNavigation();
 
     useLayoutEffect(() => {
