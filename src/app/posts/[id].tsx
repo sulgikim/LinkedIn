@@ -35,20 +35,23 @@ export default function PostDetailScreen() {
         return <Text>Something went wrong ... </Text>
     }
 
-    console.log(data);
+    // console.log(data);
 
-    // const post = posts.find((post) => post.id === id);
 
-    // if (!post) {
-    //     return <Text>Post not found</Text>;
-    // }
 
-    // return <PostListItem post={post} />;
+
+//    // const post = posts.find((post) => post.id === id);
+
+//    // if (!post) {
+//    //     return <Text>Post not found</Text>;
+//    // }
+
+//    // return <PostListItem post={post} />;
 
     return (
         <ScrollView>
         {/* <Text>{id}</Text> */}
-        <PostListItem post={data.post} />
+            <PostListItem post={data.post} />
         </ScrollView>
     );
 
