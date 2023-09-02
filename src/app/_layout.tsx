@@ -96,12 +96,15 @@ function RootLayoutNavWithProvider() { //
 //top bar
 function RootLayoutNav() {
   const { dbUser, authUser, loading } = useUserContext();
-  // console.log(authUser);
-  // console.log(dbUser);
+  // console.log('authUser: ', authUser);
+  // console.log('dbUser: ', dbUser);
+  console.log(loading);
 
   if (loading) {
+    // console.log('loading: ', loading);
     return <ActivityIndicator />;
   }
+
 
   return (
         <>

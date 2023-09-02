@@ -15,22 +15,25 @@ const createProfileMutation = gql`
 `;
 
 export default function SetupProfileScreen() {
+
     const [ name, setName ] = useState('');
     const [ about, setAbout ] = useState('');
 
-    const { authUser } = useUserContext();
+    const { authUser, reloadDbUser } = useUserContext();
 
     const [handleMutation, { loading }] = useMutation(createProfileMutation);
 
     const onSave = async () => {
-        console.warn('Saved', name);
+        // console.warn('Saved', name);
 
         try {
             await handleMutation({ variables: {
                 name,
                 about,
                 authid: authUser.id
-            }})
+            }});
+
+            reloadDbUser();
         } catch (e) {
             console.log(e);
         }

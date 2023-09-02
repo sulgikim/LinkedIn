@@ -19,9 +19,9 @@ const getUserQuery = gql`
 const UserContext = createContext({});
 
 const UserContextProvider = ({children}) => {
-    const {user: authUser, isLoaded: isAuthLoaded } = useUser();
+    const {user: authUser, isLoaded: isAuthLoaded, isSignedIn } = useUser();
     
-    const { data, loading: isDbLoading } = useQuery(getUserQuery, {
+    const { data, loading: isDbLoading, refetch } = useQuery(getUserQuery, {
         variables: {
             authid: authUser?.id
         }
@@ -29,10 +29,12 @@ const UserContextProvider = ({children}) => {
 
     const dbUser = data?.profileUsingprofile_authid_key;
 
-    const loading = !isAuthLoaded || isDbLoading;
+    const loading = !isAuthLoaded || isDbLoading && isSignedIn;
+
+    console.log(isAuthLoaded, isDbLoading, isSignedIn);
 
     return (
-        <UserContext.Provider value={{dbUser, authUser, loading}}>
+        <UserContext.Provider value={{dbUser, authUser, loading, reloadDbUser: refetch}}>
             {children}
         </UserContext.Provider>
     );
