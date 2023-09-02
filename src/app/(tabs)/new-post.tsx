@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons';
 
 import { gql, useMutation } from '@apollo/client';
+import { useUserContext } from '@/context/UserContext';
 
 const insertPost = gql`
   mutation MyMutation($userid:ID, $image:String, $content:String) {
@@ -26,15 +27,16 @@ export default function NewPostScreen() {
   const navigation = useNavigation();
   const router = useRouter();
 
+  const { dbUser } = useUserContext();
+
   const [handleMutation, { loading, error, data }] = useMutation(insertPost);
 
-
   const onPost = async () => {
-    console.warn(`Posting: `, content);
+    //console.warn(`Posting: `, content);
 
     try {
       await handleMutation({variables: {
-        userid: 2, 
+        userid: dbUser.id, 
         content
       },
       });
