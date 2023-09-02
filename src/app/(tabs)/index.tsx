@@ -41,7 +41,7 @@ const postPaginatedList = gql`
 
 export default function HomeScreen() {
   const [hasMore, setHasMore] = useState(true);
-  const {loading, error, data, fetchMore} = useQuery(postPaginatedList, {
+  const {loading, error, data, fetchMore , refetch} = useQuery(postPaginatedList, {
     variables: {first: 2}, 
   });
 
@@ -79,19 +79,24 @@ export default function HomeScreen() {
       showsVerticalScrollIndicator = {false}
       contentContainerStyle = {{gap: 10}}
       onEndReached={loadMore}
-      ListFooterComponent={() => (
-      <Text
-        onPress={loadMore}
-        style={{
-          alignSelf: 'center',
-          fontWeight:'600',
-          fontSize: 16,
-          color: 'royalblue',
-        }}
-      >  
-        Load More
-      </Text>
-      )}
+
+      refreshing={loading}
+      onRefresh={refetch}
+
+
+      // ListFooterComponent={() => (
+      // <Text
+      //   onPress={loadMore}
+      //   style={{
+      //     alignSelf: 'center',
+      //     fontWeight:'600',
+      //     fontSize: 16,
+      //     color: 'royalblue',
+      //   }}
+      // >  
+      //   Load More
+      // </Text>
+      // )}
     />
   );
 }
