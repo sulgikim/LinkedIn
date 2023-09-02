@@ -2,6 +2,7 @@ import { ActivityIndicator, FlatList, Text} from 'react-native';
 import PostListItem from '@/components/PostListItem';
 //import posts from '../../../assets/data/posts.json';
 import { gql, useQuery } from '@apollo/client';
+import { useState } from 'react';
 
 // const firstPost = posts[0];
 
@@ -21,8 +22,43 @@ const postList = gql`
   }
 `; 
 
+
+const postPaginatedList = gql`
+  query PostPaginatedList($first: Int, $after: Int) {
+    postPaginatedList(first: $first, after: $after) {
+      id
+      content
+      image
+      profile {
+        id
+        name
+        image
+        position
+      }
+    }
+  }
+`;
+
 export default function HomeScreen() {
-  const {loading, error, data} = useQuery(postList);
+  const [hasMore, setHasMore] = useState(true);
+  const {loading, error, data, fetchMore} = useQuery(postPaginatedList, {
+    variables: {first: 2}, 
+  });
+
+  const loadMore = async () => {
+    if (!hasMore) {
+      return;
+    }
+
+    // console.warn('load more');
+    const res = await fetchMore({ variables: {after: data.postPaginatedList.length }});
+    //console.log(res.data.postPaginatedList);
+    
+    if(res.data.postPaginatedList.length == 0){
+      setHasMore(false);
+    }
+  }
+  
 
   if (loading) {
     return <ActivityIndicator /> //display the circle while loading 
@@ -37,11 +73,25 @@ export default function HomeScreen() {
 
   return (
     <FlatList 
-      data = {data.postList}
+      data = {data.postPaginatedList}
       renderItem={({item}) => <PostListItem post={item}/>} 
       // keyExtractor={ (post) => post.id } //it doesn't need when array object has id or key 
       showsVerticalScrollIndicator = {false}
       contentContainerStyle = {{gap: 10}}
+      onEndReached={loadMore}
+      ListFooterComponent={() => (
+      <Text
+        onPress={loadMore}
+        style={{
+          alignSelf: 'center',
+          fontWeight:'600',
+          fontSize: 16,
+          color: 'royalblue',
+        }}
+      >  
+        Load More
+      </Text>
+      )}
     />
   );
 }
