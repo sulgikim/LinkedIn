@@ -80,9 +80,8 @@ export default function HomeScreen() {
       contentContainerStyle = {{gap: 10}}
       onEndReached={loadMore}
 
-      refreshing={loading}
+      refreshing={loading} 
       onRefresh={refetch}
-
 
       // ListFooterComponent={() => (
       // <Text
