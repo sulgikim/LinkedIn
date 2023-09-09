@@ -9,20 +9,20 @@ type ExperienceListItemProp = {
 
 export default function ExperienceListItem({
     experience,
-    isFirst,
     }: ExperienceListItemProp) {
+
     return  (
         <View style={[
             styles.container, 
             //{ backgroundColor: isFirst ? 'lightgray' : 'red'}, // only the first one in array is lightgray background
             ]}>
             <Image
-                source={{uri: experience.companyImage}}
+                source={{uri: experience.companyimage}}
                 style={styles.image} 
             />
             <View>
                 <Text style={styles.title}> {experience.title} </Text>
-                <Text> {experience.companyName} </Text>
+                <Text> {experience.companyname} </Text>
             </View>
         </View>
     );

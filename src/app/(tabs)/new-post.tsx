@@ -5,6 +5,19 @@ import { useNavigation, useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons';
 
+import { gql, useMutation } from '@apollo/client';
+import { useUserContext } from '@/context/UserContext';
+
+const insertPost = gql`
+  mutation MyMutation($userid:ID, $image:String, $content:String) {
+    insertPost(userid: $userid, image: $image, content: $content) {
+      id
+      content
+      image
+      userid
+    }
+  }
+`;
 
 export default function NewPostScreen() {
 
@@ -14,12 +27,26 @@ export default function NewPostScreen() {
   const navigation = useNavigation();
   const router = useRouter();
 
-  const onPost = () => {
-    console.warn(`Posting: `, content);
+  const { dbUser } = useUserContext();
 
-    router.push('/(tabs)/'); //redirect to home screen 
-    setContent('');
-    setImage(null);
+  const [handleMutation, { loading, error, data }] = useMutation(insertPost);
+
+  const onPost = async () => {
+    //console.warn(`Posting: `, content);
+
+    try {
+      await handleMutation({variables: {
+        userid: dbUser.id, 
+        content
+      },
+      });
+
+      router.push('/(tabs)/'); //redirect to home screen 
+      setContent('');
+      setImage(null);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const pickImage = async () => {
@@ -44,11 +71,13 @@ export default function NewPostScreen() {
       //headerLeft: () => <Image source = {{uri : user.image}} style={styles.image} />,
       headerRight: () => (
         <Pressable onPress={onPost} style={styles.postButton}> 
-          <Text style={styles.postButtonText}>Submit</Text>
+          <Text style={styles.postButtonText}>
+            {loading ? 'Submitting ...' : 'Submit'}
+          </Text>
         </Pressable>
       ), 
     }); //check _layout.tsx file 
-  }, [onPost]); 
+  }, [onPost, loading]); 
 
 
   return (

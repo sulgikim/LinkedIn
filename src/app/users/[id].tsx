@@ -1,30 +1,64 @@
-import {View, Text, Image, StyleSheet, Pressable, ScrollView} from 'react-native';
-import userJson from '../../../assets/data/user.json'; 
+import {View, Text, Image, StyleSheet, Pressable, ScrollView, ActivityIndicator} from 'react-native';
+//import userJson from '../../../assets/data/user.json'; 
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { useLayoutEffect, useState } from 'react';
 import ExperienceListItem from '@/components/ExperienceListItem'; 
 
-import { User } from '@/types';
+// import { User } from '@/types';
 
+import { gql, useQuery } from '@apollo/client';
 
+const query = gql`
+query ProfileQuery($id:ID!) {
+    profile(id: $id) {
+      id
+      name
+      position
+      image
+      backimage
+      about
+      experience {
+        id
+        title
+        companyname
+        companyimage
+      }
+    }
+  }
+  `;
 
-type UserProps = {
-    user: User;
-}
+// type UserProps = {
+//     user: User;
+// }
+
 
 export default function UserProfile() {
-    const [user, setUser] = useState<User>(userJson); //whenever data has changed, it will rerender 
+    //const [user, setUser] = useState<User>(userJson); //whenever data has changed, it will rerender 
     
     const { id } = useLocalSearchParams(); 
 
     const navigation = useNavigation();
+
+    const {loading, error, data } = useQuery(query, {variables: { id } }); //gotta be after defining id
+    const user = data?.profile;
+
+    if (loading) {
+        return <ActivityIndicator />;
+    }
+
+    if (error) {
+        console.log(error);
+        return <Text>Something went wrong.. </Text>;
+    }
+
+    // console.log(data);
 
     const onConnect = () => {
         console.warn('Connect Pressed');
     };
 
     useLayoutEffect(() => {
-        navigation.setOptions({title: user.name}); //check _layout.tsx file 
+        navigation.setOptions({title: user?.name || 'User'}); //check _layout.tsx file 
     }, [user?.name]); // only called when user name has changed 
 
 
@@ -34,7 +68,7 @@ export default function UserProfile() {
             <View style={styles.header}>
                 {/* Back Image  */}
                 <Image 
-                    source={{ uri: user.backImage }}
+                    source={{ uri: user.backimage }}
                     style={styles.backImage}
                 />
                 
@@ -68,7 +102,7 @@ export default function UserProfile() {
             {/* Experience -- need to define type cuz the data is in array */} 
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Experience</Text>
-                {user.experience?.map((experience, index) => (
+                {user.experience?.map((experience) => ( // need index for isFirst, (experience, index) like this 
                     <ExperienceListItem 
                         key={experience.id} 
                         experience={experience}

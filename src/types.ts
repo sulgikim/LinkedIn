@@ -3,7 +3,7 @@ export type Post = {
     content: string;
     image?: string; //can be string or missing (optional)
     likes: number;
-    author: User;
+    profile: User;
 };
 
 export type User = {
@@ -11,14 +11,14 @@ export type User = {
     name: string; 
     position: string;
     image?: string;
-    backImage?: string;
+    backimage?: string;
     about?: string;
-    experience?: Experience[]
+    experience?: Experience[];
 };
 
 export type Experience = {
     id: string; 
     title: string;
-    companyName: string;
-    companyImage: string;
+    companyname: string;
+    companyimage: string;
 }
